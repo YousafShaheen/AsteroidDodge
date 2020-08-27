@@ -8,3 +8,13 @@ C:\Users\Yousaf Shaheen\source\repos\AsteroidDodge\AsteroidDodge\obj\Debug\Aster
 C:\Users\Yousaf Shaheen\source\repos\AsteroidDodge\AsteroidDodge\obj\Debug\AsteroidDodge.exe
 C:\Users\Yousaf Shaheen\source\repos\AsteroidDodge\AsteroidDodge\obj\Debug\AsteroidDodge.pdb
 C:\Users\Yousaf Shaheen\source\repos\AsteroidDodge\AsteroidDodge\obj\Debug\AsteroidDodge.AsteroidDodge.resources
+C:\Users\Yousaf Shaheen\Desktop\AsteroidDodge\AsteroidDodge\bin\Debug\AsteroidDodge.exe.config
+C:\Users\Yousaf Shaheen\Desktop\AsteroidDodge\AsteroidDodge\bin\Debug\AsteroidDodge.exe
+C:\Users\Yousaf Shaheen\Desktop\AsteroidDodge\AsteroidDodge\bin\Debug\AsteroidDodge.pdb
+C:\Users\Yousaf Shaheen\Desktop\AsteroidDodge\AsteroidDodge\obj\Debug\AsteroidDodge.csprojAssemblyReference.cache
+C:\Users\Yousaf Shaheen\Desktop\AsteroidDodge\AsteroidDodge\obj\Debug\AsteroidDodge.AsteroidDodge.resources
+C:\Users\Yousaf Shaheen\Desktop\AsteroidDodge\AsteroidDodge\obj\Debug\AsteroidDodge.Properties.Resources.resources
+C:\Users\Yousaf Shaheen\Desktop\AsteroidDodge\AsteroidDodge\obj\Debug\AsteroidDodge.csproj.GenerateResource.cache
+C:\Users\Yousaf Shaheen\Desktop\AsteroidDodge\AsteroidDodge\obj\Debug\AsteroidDodge.csproj.CoreCompileInputs.cache
+C:\Users\Yousaf Shaheen\Desktop\AsteroidDodge\AsteroidDodge\obj\Debug\AsteroidDodge.exe
+C:\Users\Yousaf Shaheen\Desktop\AsteroidDodge\AsteroidDodge\obj\Debug\AsteroidDodge.pdb
