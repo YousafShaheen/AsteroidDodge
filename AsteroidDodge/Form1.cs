@@ -16,7 +16,7 @@ namespace AsteroidDodge
     public partial class AsteroidDodge : Form
     {
 
-        int time = 0; //time since game started
+        int time = 0; //measure how long the game is being played
 
         int playerScore = 0; //score for the player
 
@@ -31,7 +31,7 @@ namespace AsteroidDodge
         bool pause = true; //true if the game is paused
 
 
-        int astSpeed = 20;//20; //interval for asteroid moving in ms (reduce to 1)
+        int astSpeed = 20; //20; //interval for asteroid moving in ms (reduce to 1)
         int astMove = 20; //pixels each asteroid move.
 
         int spawnSpeed = 490; //rate at which the ateroids spawn in ms
@@ -43,7 +43,6 @@ namespace AsteroidDodge
         {
             InitializeComponent();
             InitializeTimer();
-
         }
 
         private void InitializeTimer()
@@ -107,6 +106,11 @@ namespace AsteroidDodge
                     asteroid1.Enabled = true;
                     asteroid2.Enabled = true;
                     break;
+                case 7:
+                    asteroid1.Enabled = true;
+                    asteroid2.Enabled = true;
+                    asteroid3.Enabled = true;
+                    break;
                 default:
                     Console.WriteLine("error with spawn rnd var");
                     break;
@@ -121,7 +125,7 @@ namespace AsteroidDodge
             if (!pause)
             {
                 time++;
-                playerScore += (20 - astSpeed);
+                playerScore += (21 - astSpeed);
             }
             //Console.WriteLine(astSpeed);
 
@@ -263,7 +267,9 @@ namespace AsteroidDodge
                     break;
                 case Keys.P:
                     //Console.WriteLine("PAUSE");
+                    
                     pauseLabel.Visible = !pauseLabel.Visible;
+
                     pause = !pause;
                     break;
                 default:
