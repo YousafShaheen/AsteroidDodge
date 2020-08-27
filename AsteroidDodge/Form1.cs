@@ -33,38 +33,45 @@ namespace AsteroidDodge
 
         int astSpeed = 20; //20; //interval for asteroid moving in ms (reduce to 1)
         int astMove = 20; //pixels each asteroid move.
+        int shipMove = 85; //distance the ship moves to left or right
 
         int spawnSpeed = 490; //rate at which the ateroids spawn in ms
 
-        Random rnd = new Random(); //RNG for spawn
+        Random rnd = new Random(); //RNG for asteroid spawner
 
 
         public AsteroidDodge()
         {
+            //run initializers
             InitializeComponent();
             InitializeTimer();
         }
 
+        /*
+         * intializes timers:
+         * game intervals
+         * asteroids
+         * spawner
+         */
         private void InitializeTimer()
         {
-            // Run this procedure in an appropriate event.  
-
+            
+            //sets the game tick speed and enables timer
             game.Interval = gameSpeed;
             game.Enabled = true;
 
+            //sets the spawn rate and enables the sapwner
             spawner.Interval = spawnSpeed;
             spawner.Enabled = true;
 
+
+            //sets the speed at which the asteroids move timers enabled in spawner_Tick
             asteroid1.Interval = astSpeed;
-            //asteroid1.Enabled = true;
-
             asteroid2.Interval = astSpeed;
-            //asteroid2.Enabled = true;
-
             asteroid3.Interval = astSpeed;
-            //asteroid3.Enabled = true;
+            
 
-            // Hook up timer's tick event handler.  
+            // Hook up timers tick event handler  
             this.asteroid1.Tick += new System.EventHandler(this.asteroid1_Tick);
             this.asteroid2.Tick += new System.EventHandler(this.asteroid2_Tick);
             this.asteroid3.Tick += new System.EventHandler(this.asteroid3_Tick);
@@ -73,14 +80,33 @@ namespace AsteroidDodge
         }
 
         
-
+        /*
+         * Spawns asteroids in one of 6 spawn patterns. does not run if game is paused.
+         * there are 3 posiitons, 1 for each asteroid.
+         * generate a random number from [1,6] inclusive.
+         * 
+         * possible spawn configs (0-dont spawn, 1-spawn):
+         * a1 a2 a3
+         * ----------
+         * 0  0  1
+         * 0  1  0
+         * 0  1  1
+         * 1  0  0
+         * 1  0  1
+         * 1  1  0
+         * 
+         */
         private void spawner_Tick(object Sender, EventArgs e)
         {
+            //dont run if paused
             if (pause)
                 return;
 
+            //gennerate a random num fron [1,6] inclusive
             spawn = rnd.Next(1, 7);
 
+
+            //spawns asteroid based on spawn config (enables asteroid timers)
             switch (spawn)
             {
                 case 0:
@@ -117,44 +143,52 @@ namespace AsteroidDodge
             }
         }
 
-
+        /*
+         * main game engine. does basic tasks and synchronization.
+         * handles:
+         * score display
+         * collisions (and resets the game)
+         */
         private void game_Tick(object Sender, EventArgs e)
         {
-            //Console.WriteLine("game tick");
-            Console.WriteLine(astSpeed);
+            
+            //if game is not paused, increase time count and score
             if (!pause)
             {
                 time++;
+
+                //score = game_ticks * (21-astSpeed)
                 playerScore += (21 - astSpeed);
             }
-            //Console.WriteLine(astSpeed);
-
+            
+            //displays speed
             speed.Text = (21 - astSpeed).ToString();
             score.Text = playerScore.ToString();
 
             
 
-            //increase speed by 1ms per second until astSpeed == 1ms
+            //increase speed by 1ms per 0.2s until astSpeed == 1ms
             if(time == 200 && astSpeed>1)
             {
                 astSpeed--;
                 time = time - 200;
-                //Console.WriteLine("inc speed");
             }
 
                 
             
 
-            //if there is a collision
+            //checks if there is a collisison
             if ((shipPos == 1 && a1pos) || (shipPos == 2 && a2pos) || (shipPos == 3 && a3pos))
             {
-                Console.WriteLine("game over");
+                //moves current score to previous score and resets parameters
                 prevScore.Text = playerScore.ToString();
                 playerScore = 0;
                 astSpeed = 20;
-                //pause game
+
+                //pause the game and get ready for next game
                 SendKeys.Send("p");
                 
+                //reset asteroid locations
                 ast1.Location = new Point(ast1.Location.X, 10);
                 asteroid1.Enabled = false;
                 a1pos = false;
@@ -171,15 +205,22 @@ namespace AsteroidDodge
 
         }
 
+        /*
+         * asteroid in left position.
+         * handles movement of the asteroid
+         * this runs until the asteroid goes from the top to the bottom,
+         * and then resets and disables timer. waits til the spawner calls it agian.
+         */
         private void asteroid1_Tick(object Sender, EventArgs e)
         {
-            //Console.WriteLine("ast1");
-
+            //if paused, do nothing else
             if (pause)
                 return;
 
+            //new location for asteroid
             ast1.Location = new Point(ast1.Location.X, ast1.Location.Y + astMove);
 
+            //if asteroid reaches the bottom, reset location and disable
             if (ast1.Location.Y >= resetPoint)
             {
                 ast1.Location = new Point(ast1.Location.X, 10);
@@ -187,22 +228,30 @@ namespace AsteroidDodge
                 a1pos = false;
             }
             
-
+            //if asteroid is in between collision area, set a1pos to true
             if (ast1.Location.Y >= impactPoint)
                 a1pos = true;
             else
                 a1pos = false;
 
-            
         }
 
+        /*
+         * asteroid in middle position.
+         * handles movement of the asteroid
+         * this runs until the asteroid goes from the top to the bottom,
+         * and then resets and disables timer. waits til the spawner calls it agian.
+         */
         private void asteroid2_Tick(object Sender, EventArgs e)
         {
-            //Console.WriteLine("ast2");
+            //if paused, do nothing else
             if (pause)
                 return;
+
+            //new location for asteroid
             ast2.Location = new Point(ast2.Location.X, ast2.Location.Y + astMove);
 
+            //if asteroid reaches the bottom, reset location and disable
             if (ast2.Location.Y >= resetPoint)
             {
                 ast2.Location = new Point(ast2.Location.X, 10);
@@ -210,20 +259,29 @@ namespace AsteroidDodge
                 a2pos = false;
             }
 
-
+            //if asteroid is in between collision area, set a1pos to true
             if (ast2.Location.Y >= impactPoint)
                 a2pos = true;
             else
                 a2pos = false;
         }
 
+        /*
+         * asteroid in right position.
+         * handles movement of the asteroid
+         * this runs until the asteroid goes from the top to the bottom,
+         * and then resets and disables timer. waits til the spawner calls it agian.
+         */
         private void asteroid3_Tick(object Sender, EventArgs e)
         {
-            //Console.WriteLine("ast3");
+            //if paused, do nothing else
             if (pause)
                 return;
+
+            //new location for asteroid
             ast3.Location = new Point(ast3.Location.X, ast3.Location.Y + astMove);
 
+            //if asteroid reaches the bottom, reset location and disable
             if (ast3.Location.Y >= resetPoint)
             {
                 ast3.Location = new Point(ast3.Location.X, 10);
@@ -231,54 +289,74 @@ namespace AsteroidDodge
                 a3pos = false;
             }
 
-
+            //if asteroid is in between collision area, set a1pos to true
             if (ast3.Location.Y >= impactPoint)
                 a3pos = true;
             else
                 a3pos = false;
         }
 
+        /*
+         * handles all keykoard input.
+         * handles:
+         * ship movement
+         * pause function
+         */
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            int move = 85;
-            
 
+
+            /*
+             * switch case depending on what key is pressed
+             * left: move ship left. distance stored in var move
+             * right: move ship right. distance stored in var move
+             * p: pause the game
+             */
             switch (keyData)
             {
                 case Keys.Left:
-                    //Console.WriteLine("LEFT");
+                    //left
+
+                    //dont move ship if game is paused
                     if (pause)
                         break;
+
+                    //move ship and update position
                     if (shipPos != 1)
                     {
-                        ship.Left = ship.Left - move;
+                        ship.Left = ship.Left - shipMove;
                         shipPos--;
                     }
                     break;
                 case Keys.Right:
-                    //Console.WriteLine("RIGHT");
+                    //right
+
+                    //dont move ship if game is paused
                     if (pause)
                         break;
+
+                    //move ship and update position
                     if (shipPos != 3)
                     {
-                        ship.Left = ship.Left + move;
+                        ship.Left = ship.Left + shipMove;
                         shipPos++;
                     }
                     break;
                 case Keys.P:
-                    //Console.WriteLine("PAUSE");
-                    
+                    //pause the game
+
+                    //toggle the pause label
                     pauseLabel.Visible = !pauseLabel.Visible;
 
+                    //toggle pause var
                     pause = !pause;
                     break;
                 default:
+                    //return if other key is pressed
                     return base.ProcessCmdKey(ref msg, keyData);
             }
+            //return true
             return true;
         }
-
-        
     }
-
 }
