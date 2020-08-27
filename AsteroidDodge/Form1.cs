@@ -139,7 +139,7 @@ namespace AsteroidDodge
             {
                 astSpeed--;
                 time = time - 200;
-                Console.WriteLine("inc speed");
+                //Console.WriteLine("inc speed");
             }
 
                 
