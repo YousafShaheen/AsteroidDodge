@@ -163,6 +163,8 @@ namespace AsteroidDodge
             
             //displays speed
             speed.Text = (21 - astSpeed).ToString();
+
+            //displays score
             score.Text = playerScore.ToString();
 
             
