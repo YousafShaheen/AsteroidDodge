@@ -27,15 +27,20 @@ namespace AsteroidDodge
         bool a3pos = false; //if asteroid 3 is in the collision area
         int gameSpeed = 1; //game tick speed
         int impactPoint = 400; //the impact area
-        int resetPoint = 500; //reset the asteroid to its original position
+        int resetPoint = 550; //reset the asteroid to its original position
         bool pause = true; //true if the game is paused
 
-
-        int astSpeed = 20; //20; //interval for asteroid moving in ms (reduce to 1)
+        int difficultyLevel = 500; //interval in ms of when the difficulty increases
+        int maxAstSpeed = 20; // starting asteroid speed
+        int astSpeed = 20; //interval for asteroid moving in ms (reduce to 1)
+        int astSpeedInc = 1; //increase the asteroid speed by this amount in ms
         int astMove = 20; //pixels each asteroid move.
         int shipMove = 85; //distance the ship moves to left or right
 
-        int spawnSpeed = 490; //rate at which the ateroids spawn in ms
+        int maxSpawnSpeed = 2000; //initial spawn speed
+        int spawnSpeed = 2000; //rate at which the ateroids spawn in ms
+        int spawnSpeedInc = 200; //increase the spawn speed by this amount in ms
+        int spawnSpeedLimit = 300; //spawn speed limit
 
         Random rnd = new Random(); //RNG for asteroid spawner
 
@@ -157,35 +162,42 @@ namespace AsteroidDodge
             {
                 time++;
 
-                //score = game_ticks * (21-astSpeed)
-                playerScore += (21 - astSpeed);
+                //score = game_ticks * (maxSpeed + 1 -astSpeed)
+                playerScore += (maxAstSpeed+1 - astSpeed);
             }
             
             //displays speed
-            speed.Text = (21 - astSpeed).ToString();
+            speed.Text = (maxAstSpeed+1 - astSpeed).ToString();
 
             //displays score
-            score.Text = playerScore.ToString();
+            score.Text = (playerScore/100).ToString();
 
             
 
             //increase speed by 1ms per 0.2s until astSpeed == 1ms
-            if(time == 200 && astSpeed>1)
+            if(time == difficultyLevel && astSpeed>1)
             {
-                astSpeed--;
-                time = time - 200;
+                astSpeed -= astSpeedInc;
+                spawnSpeed -= spawnSpeedInc;
+                time = time - difficultyLevel;
             }
 
-                
+            //enforce upper limit
+            if (spawnSpeed < spawnSpeedLimit)
+            {
+                spawnSpeed = spawnSpeedLimit;
+            }
+            spawner.Interval = spawnSpeed;
             
 
             //checks if there is a collisison
             if ((shipPos == 1 && a1pos) || (shipPos == 2 && a2pos) || (shipPos == 3 && a3pos))
             {
                 //moves current score to previous score and resets parameters
-                prevScore.Text = playerScore.ToString();
+                prevScore.Text = (playerScore/100).ToString();
                 playerScore = 0;
-                astSpeed = 20;
+                spawnSpeed = maxSpawnSpeed;
+                astSpeed = maxAstSpeed;
 
                 //pause the game and get ready for next game
                 SendKeys.Send("p");
